@@ -1,0 +1,11 @@
+video/
+.claude/
+.readme-tmp/
+node_modules/
+
+# ความลับ ห้ามเข้า git
+.env*
+!.env.example
+*.pem
+*.key
+credentials*.json

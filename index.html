@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+<title>BC Smart Finder — ระบบค้นหาตำแหน่งสินค้าและนำทางในโกดัง 3 มิติ (พร้อม GPS มือถือ)</title>
+<meta name="description" content="ระบบค้นหาตำแหน่งสินค้าในโกดังและร้านค้าวัสดุก่อสร้าง-ไฟฟ้า 3 มิติ เลือกค้นหาได้หลายสินค้าพร้อมกัน คำนวณเส้นทางเดินหยิบสินค้าใกล้สุด รองรับ GPS มือถือ แท็บเล็ต และโน้ตบุ๊ก" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://smartfinder.bcsmethai.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="th_TH" />
+<meta property="og:title" content="BC Smart Finder — ค้นหาตำแหน่งสินค้าและนำทางในโกดัง 3 มิติ" />
+<meta property="og:description" content="ค้นหาสินค้าวัสดุก่อสร้าง ไฟฟ้า ประปา เหล็ก สี เครื่องมือช่าง ครบ 2,000 รายการ ปักหมุดหลายจุดพร้อมนำทางด้วย GPS มือถือ" />
+<meta property="og:url" content="https://smartfinder.bcsmethai.com/" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "บริษัท บ้านเชียงซอฟท์ จำกัด",
+      "url": "https://bcsmethai.com"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "หน้าแรก",
+          "item": "https://bcsmethai.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "ค้นหาตำแหน่งสินค้าในโกดัง 3 มิติ",
+          "item": "https://smartfinder.bcsmethai.com/"
+        }
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "BC Smart Finder — ระบบค้นหาตำแหน่งสินค้าในโกดัง 3 มิติ",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web, iOS, Android, Windows, macOS",
+      "description": "ระบบค้นหาตำแหน่งสินค้าและนำทางเดินภายในร้านค้าวัสดุก่อสร้างและคลังสินค้า 3 มิติ รองรับการเลือกหลายสินค้าและระบบ GPS มือถือ"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "สามารถค้นหาและปักหมุดสินค้าพร้อมกันหลายรายการได้หรือไม่?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "สามารถกดเลือกสินค้าได้หลายรายการไม่จำกัด ระบบจะปักหมุด 3 มิติทุกจุดและจัดลำดับเส้นทางเดินหยิบสินค้าที่สั้นที่สุดให้อัตโนมัติ"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "ระบบ GPS มือถือทำงานอย่างไรในโกดัง?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "รองรับพิกัด GPS จริงจากสมาร์ตโฟนและเข็มทิศทิศทาง พร้อมปุ่มเทียบจุดอ้างอิงทางเข้าโกดัง รวมถึงมีโหมดเดินนำทางอัตโนมัติและโหมดแตะพื้นโกดังสำหรับใช้งานในอาคาร"
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'Noto Sans Thai', 'system-ui', 'sans-serif'] }
+      }
+    }
+  };
+</script>
+<style>
+  :root {
+    --brand: #2563eb;
+    --emerald: #059669;
+    --ink: #0f172a;
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%; overflow: hidden;
+    font-family: 'Inter', 'Noto Sans Thai', system-ui, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(1200px 800px at 65% 20%, #f8fafc 0%, #e8eef5 55%, #dbe4ef 100%);
+    -webkit-tap-highlight-color: transparent;
+  }
+  #scene { position: fixed; inset: 0; display: block; outline: none; touch-action: none; }
+
+  /* Glassmorphism Surfaces */
+  .glass {
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(18px) saturate(175%);
+    -webkit-backdrop-filter: blur(18px) saturate(175%);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 18px 40px -18px rgba(15, 23, 42, 0.26), 0 2px 6px -2px rgba(15, 23, 42, 0.08);
+  }
+  .glass-dark {
+    background: rgba(15, 23, 42, 0.86);
+    backdrop-filter: blur(16px) saturate(165%);
+    -webkit-backdrop-filter: blur(16px) saturate(165%);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    box-shadow: 0 18px 40px -16px rgba(2, 6, 23, 0.55);
+  }
+
+  /* Baseline-First Utility: ทุกองค์ประกอบในแถวเดียวกันอยู่ระนาบกลางเดียวกันเป๊ะ */
+  .row-base { display: flex; align-items: center; }
+  .btn-base {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    line-height: 1; white-space: nowrap; cursor: pointer; user-select: none;
+    transition: background-color .16s ease, color .16s ease, transform .14s ease, box-shadow .16s ease, border-color .16s ease;
+  }
+  .btn-base:active { transform: scale(0.98); }
+  .badge-base {
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    line-height: 1; white-space: nowrap;
+  }
+  .tnum { font-feature-settings: 'tnum' 1; font-variant-numeric: tabular-nums; }
+  .scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.45); border-radius: 99px; }
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Segmented Control */
+  .seg button[aria-pressed="true"] {
+    background: #ffffff; color: #1d4ed8;
+    box-shadow: 0 2px 8px -2px rgba(37, 99, 235, 0.32);
+  }
+
+  /* Switch Toggle */
+  .toggle {
+    width: 36px; height: 20px; border-radius: 99px; background: #cbd5e1;
+    position: relative; transition: background .2s; flex: none; cursor: pointer; border: none;
+  }
+  .toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s;
+  }
+  .toggle[aria-checked="true"] { background: #2563eb; }
+  .toggle[aria-checked="true"]::after { transform: translateX(16px); }
+
+  /* Range Slider */
+  input[type=range] {
+    -webkit-appearance: none; appearance: none; height: 6px; border-radius: 99px;
+    background: #e2e8f0; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: #fff; border: 2.5px solid #2563eb; box-shadow: 0 2px 6px rgba(37,99,235,.35); cursor: pointer;
+  }
+
+  /* Live Dot Pulse */
+  .live-dot { animation: pulseDot 1.8s infinite; }
+  @keyframes pulseDot {
+    0% { box-shadow: 0 0 0 0 currentColor; }
+    70% { box-shadow: 0 0 0 7px transparent; }
+    100% { box-shadow: 0 0 0 0 transparent; }
+  }
+
+  /* Loader */
+  #loader {
+    position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(900px 600px at 50% 40%, #ffffff 0%, #e9eef5 60%, #dbe3ee 100%);
+    transition: opacity .5s ease;
+  }
+  .shimmer {
+    background: linear-gradient(90deg, #2563eb 0%, #10b981 50%, #2563eb 100%);
+    background-size: 200% 100%; animation: shim 1.5s linear infinite;
+  }
+  @keyframes shim { from { background-position: 200% 0; } to { background-position: 0 0; } }
+
+  /* 3D Overlay Pins & Labels */
+  #pinLayer, #zoneLabelLayer { position: fixed; inset: 0; pointer-events: none; z-index: 6; overflow: hidden; }
+  .pin-card {
+    position: absolute; left: 0; top: 0; pointer-events: auto; cursor: pointer;
+    transform: translate(-50%, -100%); will-change: transform;
+    transition: filter .15s ease;
+  }
+  .pin-card:hover { filter: brightness(1.05); z-index: 9; }
+  .user-pin {
+    position: absolute; left: 0; top: 0; pointer-events: none;
+    transform: translate(-50%, -100%); will-change: transform; z-index: 8;
+  }
+  .zone-chip {
+    position: absolute; left: 0; top: 0; pointer-events: none;
+    transform: translate(-50%, -50%); will-change: transform;
+  }
+
+  /* มุมมองจากสายตาลูกค้า: ลากนิ้วบนจอ = หันมอง (ไม่ให้เบราว์เซอร์เลื่อน/ซูมหน้า) และแสดงปุ่มเดินเสมอ */
+  body.eye-mode #scene { touch-action: none; cursor: grab; }
+  body.eye-mode #walkPad { display: grid; }
+  body.eye-mode #zoneLabelLayer { display: none; }
+
+  /* Tap-to-move Banner */
+  body.tap-move-mode #scene { cursor: crosshair; }
+
+  /* Responsive Layout Variables */
+  #topbar {
+    position: fixed; z-index: 20;
+    left: calc(10px + var(--sal)); right: calc(10px + var(--sar)); top: calc(10px + var(--sat));
+    height: 54px; padding: 0 12px; gap: 10px;
+  }
+  #navBanner {
+    position: fixed; z-index: 18;
+    top: calc(70px + var(--sat)); left: 50%; transform: translateX(-50%);
+    max-width: min(680px, calc(100vw - 20px - var(--sal) - var(--sar)));
+    width: max-content;
+  }
+  #fabCol {
+    position: fixed; z-index: 17;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  #toast {
+    position: fixed; z-index: 30; left: 50%; transform: translateX(-50%);
+    bottom: calc(82px + var(--sab)); max-width: calc(100vw - 24px);
+    display: none; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px;
+  }
+  #toast.show { display: flex; animation: toastUp .26s cubic-bezier(.2,.8,.2,1); }
+  @keyframes toastUp { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+  /* Virtual Walk Pad */
+  #walkPad {
+    position: fixed; z-index: 17; display: none;
+    grid-template-columns: repeat(3, 44px); grid-auto-rows: 44px; gap: 5px;
+    touch-action: none; user-select: none;
+  }
+  #walkPad.show { display: grid; }
+  .wpad-btn {
+    border-radius: 12px; background: rgba(15, 23, 42, 0.75); color: #fff;
+    border: 1px solid rgba(255,255,255,0.28); font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .wpad-btn.on { background: #059669; transform: scale(0.94); }
+
+  /* ---------- DESKTOP / NOTEBOOK (≥ 1180px) ---------- */
+  @media (min-width: 1180px) {
+    #mobileDock { display: none !important; }
+    .panel-sheet {
+      position: fixed; z-index: 16; top: calc(74px + var(--sat)); bottom: calc(14px + var(--sab));
+      display: flex; flex-direction: column; overflow: hidden;
+      transition: transform .24s cubic-bezier(.2,.8,.2,1), opacity .2s ease;
+    }
+    #catalogPanel { left: calc(12px + var(--sal)); width: 372px; }
+    #rightStack {
+      position: fixed; z-index: 16; right: calc(12px + var(--sar));
+      top: calc(74px + var(--sat)); bottom: calc(14px + var(--sab)); width: 356px;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    #rightStack > .panel-sheet {
+      position: relative; top: auto; bottom: auto; pointer-events: auto;
+    }
+    #routePanel { flex: 1 1 58%; min-height: 0; }
+    #gpsPanel { flex: 0 1 auto; max-height: 44%; }
+    body.hide-left #catalogPanel { transform: translateX(-106%); opacity: 0; pointer-events: none; }
+    body.hide-right #rightStack { transform: translateX(106%); opacity: 0; pointer-events: none; }
+    #fabCol { right: 380px; bottom: 18px; transition: right .24s ease; }
+    body.hide-right #fabCol { right: 16px; }
+    #walkPad { left: 396px; bottom: 18px; transition: left .24s ease; }
+    body.hide-left #walkPad { left: 16px; }
+    #navBanner { max-width: calc(100vw - 780px); }
+    .mob-sheet-bar { display: none !important; }
+  }
+
+  /* ---------- TABLET & MOBILE (< 1180px) ---------- */
+  @media (max-width: 1179.98px) {
+    #desktopPanelToggles { display: none !important; }
+    #rightStack { display: contents; }
+    #topbar { height: 50px; padding: 0 8px; gap: 6px; }
+    #topbar .brand-sub { display: none; }
+    #mobileDock {
+      position: fixed; z-index: 22;
+      left: calc(8px + var(--sal)); right: calc(8px + var(--sar)); bottom: calc(8px + var(--sab));
+      height: 56px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px;
+    }
+    .panel-sheet {
+      position: fixed; z-index: 19;
+      left: calc(8px + var(--sal)); right: calc(8px + var(--sar));
+      bottom: calc(70px + var(--sab));
+      height: 52dvh; max-height: calc(100dvh - 146px - var(--sat) - var(--sab));
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    .panel-sheet.mob-open { display: flex; animation: sheetRise .22s cubic-bezier(.2,.8,.2,1); }
+    .panel-sheet.mob-tall { height: calc(100dvh - 138px - var(--sat) - var(--sab)); }
+    @keyframes sheetRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* แถบนำทางด้านบนสูงตามความยาวชื่อสินค้า (--nav-h ตั้งจาก app.js) → ปุ่มลอยและปุ่มเดินเลื่อนลงตาม ไม่ให้ถูกบัง */
+    #fabCol { right: calc(10px + var(--sar)); top: calc(74px + max(52px, var(--nav-h, 52px)) + var(--sat)); }
+    #walkPad { left: calc(10px + var(--sal)); top: calc(74px + max(52px, var(--nav-h, 52px)) + var(--sat)); }
+    #navBanner .nav-text { flex-basis: 100%; }
+    #navBanner {
+      top: calc(66px + var(--sat));
+      left: calc(8px + var(--sal)); right: calc(8px + var(--sar));
+      transform: none; width: auto; max-width: none;
+    }
+  }
+
+  /* Tablet Landscape / Large Portrait: Dock panels cleanly on right side so 3D stays wide */
+  @media (min-width: 740px) and (max-width: 1179.98px) {
+    .panel-sheet {
+      left: auto; width: min(400px, 48vw);
+      top: calc(122px + var(--sat)); bottom: calc(72px + var(--sab));
+      height: auto; max-height: none;
+    }
+    #fabCol { right: auto; left: calc(12px + var(--sal)); top: calc(122px + var(--sat)); }
+    #walkPad { left: calc(12px + var(--sal)); top: auto; bottom: calc(74px + var(--sab)); }
+  }
+
+  /* Small Mobile Portrait Tweaks */
+  @media (max-width: 639.98px) {
+    #roleSeg { display: none; }
+    #topbar .brand-title { font-size: 14px; }
+    #searchInput { font-size: 16px; } /* ป้องกัน iOS Auto-zoom เวลาแตะช่องค้นหา */
+    #searchInput::-webkit-search-cancel-button { display: none; } /* มีปุ่มล้างของระบบอยู่แล้ว ไม่ให้ขึ้น ✕ ซ้อนสองอัน */
+    #topGpsBtn .gps-txt-long { display: none; }
+    /* จอแคบ: ชื่อโซนยาวเบียดช่องค้นหาจนมองไม่เห็นคำที่พิมพ์ — ย่อชื่อโซน และขยายช่องค้นหาเต็มแถบตอนกำลังพิมพ์ */
+    #topGpsLabel { max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    #topbar:has(#searchInput:focus) .brand-title, #topbar:has(#searchInput:focus) #topGpsBtn { display: none; }
+  }
+</style>
+</head>
+<body>
+<canvas id="scene" tabindex="0" aria-label="แผนผังคลังสินค้าและร้านวัสดุก่อสร้าง 3 มิติ"></canvas>
+
+<!-- LOADER -->
+<div id="loader" role="status" aria-live="polite">
+  <div class="text-center px-6">
+    <div class="mx-auto mb-4 w-14 h-14 rounded-2xl shimmer flex items-center justify-center shadow-xl shadow-blue-600/30">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <div class="text-xl font-extrabold tracking-tight text-slate-900">BC Smart Finder <span class="text-blue-600">3D</span></div>
+    <div id="loaderText" class="mt-1.5 text-sm text-slate-500 font-medium">กำลังสร้างผังโกดังและรายการสินค้า 3 มิติ…</div>
+    <div class="mt-4 w-64 h-1.5 mx-auto rounded-full bg-slate-200 overflow-hidden">
+      <div id="loaderBar" class="h-full bg-blue-600 rounded-full transition-all duration-300" style="width:10%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOP HEADER BAR -->
+<header id="topbar" class="glass rounded-2xl row-base">
+  <div class="row-base gap-2.5 flex-none">
+    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-emerald-600 flex items-center justify-center shadow-md shadow-blue-600/25 flex-none">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <div class="leading-tight">
+      <h1 class="brand-title m-0 font-extrabold text-[15px] tracking-tight text-slate-900 whitespace-nowrap">BC Smart Finder</h1>
+      <div class="brand-sub text-[10px] font-semibold text-slate-500 whitespace-nowrap">ค้นหาตำแหน่งสินค้า · นำทางในโกดัง</div>
+    </div>
+  </div>
+
+  <!-- ช่องค้นหาหลัก -->
+  <div class="relative flex-1 min-w-0 max-w-md">
+    <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="searchInput" type="search" enterkeyhint="search" autocomplete="off"
+      class="w-full h-9 pl-9 pr-8 rounded-xl bg-slate-100/90 border border-slate-200/90 text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/35 focus:bg-white"
+      placeholder="ค้นหาสินค้า เช่น สายไฟ, เบรกเกอร์, ท่อ PVC, ปูน, สว่าน…" />
+    <button id="btnClearSearch" type="button" aria-label="ล้างคำค้นหา"
+      class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-300/80 text-slate-700 text-[11px] font-bold items-center justify-center hover:bg-slate-400/80">✕</button>
+  </div>
+
+  <!-- สวิตช์บทบาท: ลูกค้า / พนักงาน / ช่าง -->
+  <div id="roleSeg" class="seg row-base gap-0.5 p-1 rounded-xl bg-slate-100 text-xs font-bold text-slate-600 flex-none" role="group" aria-label="มุมมองผู้ใช้งาน">
+    <button type="button" data-role="customer" aria-pressed="true" class="btn-base h-7 px-2.5 rounded-lg">ลูกค้า</button>
+    <button type="button" data-role="staff" aria-pressed="false" class="btn-base h-7 px-2.5 rounded-lg">พนักงานคลัง</button>
+    <button type="button" data-role="contractor" aria-pressed="false" class="btn-base h-7 px-2.5 rounded-lg">ช่าง/ผู้รับเหมา</button>
+  </div>
+
+  <div class="flex-1 hidden xl:block"></div>
+
+  <!-- สถานะ GPS ด่วน -->
+  <button id="topGpsBtn" type="button" class="btn-base h-9 px-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex-none hover:bg-emerald-100/80">
+    <span id="topGpsDot" class="w-2 h-2 rounded-full bg-emerald-500 text-emerald-500 live-dot"></span>
+    <span id="topGpsLabel">ทางเข้าลูกค้า</span>
+    <span class="gps-txt-long text-[11px] font-semibold text-emerald-600" id="topGpsSub">· พร้อมนำทาง</span>
+  </button>
+
+  <!-- ปุ่มพับแผงซ้าย/ขวาบนจอ Notebook -->
+  <div id="desktopPanelToggles" class="row-base gap-1.5 flex-none">
+    <button id="btnToggleLeft" type="button" class="btn-base h-9 px-2.5 rounded-xl bg-white/80 border border-slate-200 text-xs font-bold text-slate-700 hover:bg-white" title="ซ่อน/แสดงรายการสินค้า">
+      <span>สินค้า</span>
+    </button>
+    <button id="btnToggleRight" type="button" class="btn-base h-9 px-2.5 rounded-xl bg-white/80 border border-slate-200 text-xs font-bold text-slate-700 hover:bg-white" title="ซ่อน/แสดงเส้นทางและ GPS">
+      <span>นำทาง</span><span id="deskSelBadge" class="badge-base min-w-[18px] h-[18px] px-1 rounded-full bg-blue-600 text-white text-[10px] font-extrabold tnum">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- แถบสรุปการนำทางจุดถัดไป (แสดงเหนือฉาก 3 มิติ) -->
+<section id="navBanner" class="glass-dark text-white rounded-2xl px-3 py-2 shadow-xl hidden" aria-live="polite">
+  <div class="row-base justify-between gap-x-2.5 gap-y-1.5 flex-wrap">
+    <div class="nav-text row-base gap-2 min-w-0 flex-1">
+      <span id="navStepBadge" class="badge-base w-6 h-6 rounded-lg bg-emerald-500 text-white text-xs font-extrabold flex-none tnum">1</span>
+      <div class="min-w-0 flex-1">
+        <div class="row-base gap-1.5 text-xs font-bold truncate">
+          <span id="navNextName" class="truncate">กำลังคำนวณจุดถัดไป…</span>
+        </div>
+        <div class="row-base gap-2 text-[11px] text-slate-300 mt-0.5 flex-wrap">
+          <span id="navNextLoc" class="font-bold text-amber-300">—</span>
+          <span>·</span>
+          <span id="navNextDist" class="tnum text-emerald-300 font-semibold">อีก 0 ม.</span>
+          <span class="hidden sm:inline">·</span>
+          <span id="navTotalInfo" class="hidden sm:inline text-slate-300 tnum">รวม 0 ม.</span>
+        </div>
+      </div>
+    </div>
+    <div class="row-base gap-1.5 flex-none ml-auto">
+      <button id="btnBannerZoom" type="button" class="btn-base h-8 px-2.5 rounded-xl bg-white/15 border border-white/20 text-xs font-bold text-white hover:bg-white/25">
+        ดูจุดนี้
+      </button>
+      <button id="btnBannerPick" type="button" class="btn-base h-8 px-2.5 rounded-xl bg-blue-600 text-xs font-bold text-white hover:bg-blue-500">
+        หยิบแล้ว ✓
+      </button>
+      <button id="btnBannerWalk" type="button" class="btn-base h-8 px-3 rounded-xl bg-emerald-500 text-xs font-extrabold text-white hover:bg-emerald-400 shadow-md shadow-emerald-600/30">
+        <span id="bannerWalkTxt">เดินนำทาง</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- แผงซ้าย: ค้นหาและเลือกสินค้า (Catalog Panel) -->
+<aside id="catalogPanel" data-mob="catalog" class="panel-sheet glass rounded-2xl" aria-label="ค้นหาและเลือกสินค้า">
+  <!-- แถบหัวแผงสำหรับมือถือ/แท็บเล็ต -->
+  <div class="mob-sheet-bar row-base justify-between px-3.5 pt-2.5 pb-1 border-b border-slate-200/70">
+    <span class="text-xs font-extrabold text-slate-700">เลือกสินค้าที่จะค้นหาตำแหน่ง (เลือกได้หลายรายการ)</span>
+    <div class="row-base gap-1.5">
+      <button type="button" class="mob-expand btn-base h-7 px-2 rounded-lg bg-slate-100 text-[11px] font-bold text-slate-600">ขยาย/ย่อ</button>
+      <button type="button" class="mob-close btn-base w-7 h-7 rounded-lg bg-slate-100 text-xs font-bold text-slate-600" aria-label="ปิดแผง">✕</button>
+    </div>
+  </div>
+
+  <!-- สลับมุมมองผู้ใช้งานบนจอมือถือเล็ก -->
+  <div class="px-3 pt-2.5 sm:hidden">
+    <div id="roleSegMob" class="seg grid grid-cols-3 gap-1 p-1 rounded-xl bg-slate-100 text-[11px] font-bold text-slate-600">
+      <button type="button" data-role="customer" aria-pressed="true" class="btn-base h-7 rounded-lg">ลูกค้า</button>
+      <button type="button" data-role="staff" aria-pressed="false" class="btn-base h-7 rounded-lg">พนักงานคลัง</button>
+      <button type="button" data-role="contractor" aria-pressed="false" class="btn-base h-7 rounded-lg">ช่าง/ผู้รับเหมา</button>
+    </div>
+  </div>
+
+  <!-- ชุดสินค้าตัวอย่างด่วน (Quick Multi-Item Presets) -->
+  <div class="px-3 pt-2.5 pb-1.5">
+    <div class="row-base justify-between mb-1.5">
+      <span class="text-[11px] font-extrabold text-slate-500">ชุดรายการตัวอย่าง (กดเลือกหลายจุดทันที)</span>
+      <span id="catalogCount" class="text-[11px] font-bold text-blue-700 tnum">2,000 รายการ</span>
+    </div>
+    <div id="presetBar" class="flex gap-1.5 overflow-x-auto scrollbar-none pb-1"></div>
+  </div>
+
+  <!-- หมวดหมู่สินค้า -->
+  <div class="px-3 pb-2 border-b border-slate-200/70">
+    <div id="catBar" class="flex gap-1.5 overflow-x-auto scrollbar-none pb-0.5"></div>
+    <div class="row-base justify-between gap-2 mt-2">
+      <div id="locFilterSeg" class="seg row-base gap-0.5 p-0.5 rounded-lg bg-slate-100 text-[11px] font-bold text-slate-600">
+        <button type="button" data-loc="all" aria-pressed="true" class="btn-base h-6 px-2 rounded-md">ทุกโซน</button>
+        <button type="button" data-loc="self" aria-pressed="false" class="btn-base h-6 px-2 rounded-md">หยิบเองหน้าร้าน</button>
+        <button type="button" data-loc="bulk" aria-pressed="false" class="btn-base h-6 px-2 rounded-md">พาเลท/ของใหญ่</button>
+      </div>
+      <button id="btnSelectVisible" type="button" class="btn-base h-6 px-2 rounded-lg bg-blue-50 border border-blue-200 text-[11px] font-bold text-blue-700 hover:bg-blue-100">
+        + เลือก 5 อันดับแรก
+      </button>
+    </div>
+  </div>
+
+  <!-- รายการสินค้า -->
+  <div id="productList" class="flex-1 overflow-y-auto scrollbar-thin p-2.5 space-y-2"></div>
+</aside>
+
+<!-- ฝั่งขวา: รายการสินค้าที่เลือกนำทาง + แผง GPS มือถือ -->
+<div id="rightStack">
+  <!-- แผงรายการสินค้าที่ปักหมุดและลำดับเดินหยิบ (Route & Selected Items Panel) -->
+  <aside id="routePanel" data-mob="route" class="panel-sheet glass rounded-2xl" aria-label="รายการสินค้าที่เลือกและลำดับเดินหยิบ">
+    <div class="mob-sheet-bar row-base justify-between px-3.5 pt-2.5 pb-1 border-b border-slate-200/70">
+      <span class="text-xs font-extrabold text-slate-700">รายการสินค้าที่ปักหมุดและเส้นทางเดิน</span>
+      <div class="row-base gap-1.5">
+        <button type="button" class="mob-expand btn-base h-7 px-2 rounded-lg bg-slate-100 text-[11px] font-bold text-slate-600">ขยาย/ย่อ</button>
+        <button type="button" class="mob-close btn-base w-7 h-7 rounded-lg bg-slate-100 text-xs font-bold text-slate-600" aria-label="ปิดแผง">✕</button>
+      </div>
+    </div>
+
+    <div class="px-3.5 pt-3 pb-2.5 border-b border-slate-200/70">
+      <div class="row-base justify-between gap-2">
+        <div class="row-base gap-2">
+          <span class="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-extrabold tnum" id="selCountBadge">0</span>
+          <h2 class="m-0 text-sm font-extrabold text-slate-900">รายการค้นหาตำแหน่ง</h2>
+        </div>
+        <div class="row-base gap-1.5">
+          <button id="btnStartWalk" type="button" class="btn-base h-7 px-2.5 rounded-lg bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 shadow-sm">
+            <span id="startWalkLabel">🚶 เดินนำทาง</span>
+          </button>
+          <button id="btnClearList" type="button" class="btn-base h-7 px-2 rounded-lg bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200">
+            ล้าง
+          </button>
+        </div>
+      </div>
+
+      <!-- การ์ดสรุประยะเดินและราคารวม -->
+      <div class="grid grid-cols-3 gap-1.5 mt-2.5 text-center">
+        <div class="rounded-xl bg-slate-50/90 border border-slate-200/70 py-1.5 px-1">
+          <div class="text-[10px] font-semibold text-slate-500">ระยะเดินรวม</div>
+          <div id="sumDist" class="text-xs font-extrabold text-emerald-700 tnum mt-0.5">0 ม.</div>
+        </div>
+        <div class="rounded-xl bg-slate-50/90 border border-slate-200/70 py-1.5 px-1">
+          <div class="text-[10px] font-semibold text-slate-500">เวลาเดินราว</div>
+          <div id="sumTime" class="text-xs font-extrabold text-slate-800 tnum mt-0.5">0 นาที</div>
+        </div>
+        <div class="rounded-xl bg-slate-50/90 border border-slate-200/70 py-1.5 px-1">
+          <div class="text-[10px] font-semibold text-slate-500" id="sumPriceLbl">ยอดรวมประมาณ</div>
+          <div id="sumPrice" class="text-xs font-extrabold text-blue-700 tnum mt-0.5">฿0</div>
+        </div>
+      </div>
+
+      <div class="row-base justify-between mt-2 text-xs">
+        <span class="font-semibold text-slate-600">จัดลำดับเดินใกล้สุดอัตโนมัติ</span>
+        <button id="tglOptimizeRoute" type="button" class="toggle" role="switch" aria-checked="true" aria-label="จัดลำดับเดินใกล้สุดอัตโนมัติ"></button>
+      </div>
+    </div>
+
+    <!-- รายการหมุดที่เลือก -->
+    <div id="selectedList" class="flex-1 overflow-y-auto scrollbar-thin p-2.5 space-y-2"></div>
+  </aside>
+
+  <!-- แผงควบคุมระบบ GPS มือถือ และตำแหน่งผู้ใช้ (GPS & Settings Panel) -->
+  <aside id="gpsPanel" data-mob="gps" class="panel-sheet glass rounded-2xl" aria-label="ระบบ GPS มือถือและการตั้งค่า">
+    <div class="mob-sheet-bar row-base justify-between px-3.5 pt-2.5 pb-1 border-b border-slate-200/70">
+      <span class="text-xs font-extrabold text-slate-700">ระบบ GPS มือถือ & ตำแหน่งปัจจุบัน</span>
+      <div class="row-base gap-1.5">
+        <button type="button" class="mob-expand btn-base h-7 px-2 rounded-lg bg-slate-100 text-[11px] font-bold text-slate-600">ขยาย/ย่อ</button>
+        <button type="button" class="mob-close btn-base w-7 h-7 rounded-lg bg-slate-100 text-xs font-bold text-slate-600" aria-label="ปิดแผง">✕</button>
+      </div>
+    </div>
+
+    <div class="p-3 overflow-y-auto scrollbar-thin space-y-2.5">
+      <div class="row-base justify-between">
+        <div class="row-base gap-2">
+          <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          </span>
+          <h2 class="m-0 text-sm font-extrabold text-slate-900">ตำแหน่งของคุณ (GPS มือถือ)</h2>
+        </div>
+        <span id="gpsModePill" class="badge-base px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">โหมดจำลองในอาคาร</span>
+      </div>
+
+      <!-- สลับโหมด GPS 3 รูปแบบ -->
+      <div id="gpsModeSeg" class="seg grid grid-cols-3 gap-1 p-1 rounded-xl bg-slate-100 text-[11px] font-bold text-slate-600">
+        <button type="button" data-gpsmode="real" aria-pressed="false" class="btn-base h-8 rounded-lg">📡 GPS มือถือจริง</button>
+        <button type="button" data-gpsmode="walk" aria-pressed="false" class="btn-base h-8 rounded-lg">🚶 เดินอัตโนมัติ</button>
+        <button type="button" data-gpsmode="sim" aria-pressed="true" class="btn-base h-8 rounded-lg">👆 กำหนดจุดยืน</button>
+      </div>
+
+      <!-- กล่องข้อมูลพิกัดปัจจุบัน -->
+      <div class="rounded-xl bg-slate-50/95 border border-slate-200/80 p-2.5 text-xs space-y-1.5">
+        <div class="row-base justify-between gap-2">
+          <span class="text-slate-500 font-medium">โซนที่ยืนอยู่:</span>
+          <span id="userZoneTxt" class="font-bold text-slate-800 truncate">ทางเข้าลูกค้า (ทิศใต้)</span>
+        </div>
+        <div class="row-base justify-between gap-2">
+          <span class="text-slate-500 font-medium">พิกัดในโกดัง / GPS:</span>
+          <span id="userCoordTxt" class="font-semibold text-blue-700 tnum">X 18.5, Z 15.8 ม.</span>
+        </div>
+        <div id="realGpsBox" class="hidden pt-1.5 border-t border-slate-200/80 space-y-2">
+          <div class="row-base justify-between text-[11px]">
+            <span class="text-slate-500">ความแม่นยำสัญญาณ:</span>
+            <span id="gpsAccTxt" class="font-bold text-emerald-700 tnum">รอสัญญาณดาวเทียม…</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button id="btnCalibrateEntrance" type="button" class="btn-base h-8 px-2 rounded-lg bg-blue-600 text-white text-[11px] font-bold hover:bg-blue-700">
+              📌 ตั้งจุดนี้ = ทางเข้า
+            </button>
+            <button id="btnCompassPerm" type="button" class="btn-base h-8 px-2 rounded-lg bg-white border border-slate-200 text-[11px] font-bold text-slate-700 hover:bg-slate-50">
+              🧭 เปิดเข็มทิศหันหน้า
+            </button>
+          </div>
+          <div>
+            <div class="row-base justify-between text-[11px] mb-1">
+              <span class="text-slate-500 font-medium">ปรับทิศเหนือของอาคารโกดัง</span>
+              <span id="valNorthDeg" class="font-bold text-blue-700 tnum">0° (ทิศเหนือตรง)</span>
+            </div>
+            <input id="sldNorthDeg" type="range" min="0" max="355" step="5" value="0" class="w-full" aria-label="ปรับมุมทิศเหนืออาคาร" />
+          </div>
+        </div>
+        <div id="gpsStatusMsg" class="text-[11px] text-slate-500 leading-snug">
+          แตะปุ่ม "📡 GPS มือถือจริง" เมื่อเดินอยู่ในพื้นที่ หรือเลือกจุดยืนด่วนด้านล่างเพื่อทดสอบเส้นทาง
+        </div>
+      </div>
+
+      <!-- ย้ายจุดยืนด่วน / ปุ่มเดินจำลอง -->
+      <div>
+        <div class="row-base justify-between mb-1.5">
+          <span class="text-[11px] font-bold text-slate-600">ย้ายตำแหน่งฉันไปจุดสำคัญด่วน</span>
+          <button id="btnToggleWalkPad" type="button" class="btn-base h-6 px-2 rounded-lg bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-700 hover:bg-slate-200/70">
+            🕹️ ปุ่มกดเดินบนจอ
+          </button>
+        </div>
+        <div id="quickSpots" class="grid grid-cols-2 gap-1.5 text-[11px]"></div>
+      </div>
+
+      <!-- ตั้งค่าการเดินและการแสดงผล 3 มิติ -->
+      <div class="pt-2 border-t border-slate-200/80 space-y-2 text-xs">
+        <div class="row-base justify-between">
+          <span class="font-medium text-slate-600">กล้องเคลื่อนตามตำแหน่งฉัน</span>
+          <button id="tglFollowUser" type="button" class="toggle" role="switch" aria-checked="false" aria-label="กล้องเคลื่อนตามตำแหน่งฉัน"></button>
+        </div>
+        <div class="row-base justify-between">
+          <span class="font-medium text-slate-600">ความเร็วเดินนำทาง</span>
+          <div id="walkSpeedSeg" class="seg row-base gap-0.5 p-0.5 rounded-lg bg-slate-100 text-[11px] font-bold text-slate-600">
+            <button type="button" data-spd="1.35" aria-pressed="false" class="btn-base h-6 px-2 rounded-md">เดินปกติ</button>
+            <button type="button" data-spd="2.8" aria-pressed="true" class="btn-base h-6 px-2 rounded-md">เร็ว 2x</button>
+            <button type="button" data-spd="5.0" aria-pressed="false" class="btn-base h-6 px-2 rounded-md">สาธิต 4x</button>
+          </div>
+        </div>
+        <div class="row-base justify-between">
+          <span class="font-medium text-slate-600">คุณภาพกราฟิก 3D <span id="gfxNow" class="text-[10px] text-slate-400"></span></span>
+          <div id="gfxSeg" class="seg row-base gap-0.5 p-0.5 rounded-lg bg-slate-100 text-[10px] font-bold text-slate-600">
+            <button type="button" data-gfx="auto" aria-pressed="true" class="btn-base h-6 px-1.5 rounded-md">อัตโนมัติ</button>
+            <button type="button" data-gfx="high" aria-pressed="false" class="btn-base h-6 px-1.5 rounded-md">สูง</button>
+            <button type="button" data-gfx="mid" aria-pressed="false" class="btn-base h-6 px-1.5 rounded-md">กลาง</button>
+            <button type="button" data-gfx="low" aria-pressed="false" class="btn-base h-6 px-1.5 rounded-md">ประหยัด</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- ปุ่มลอยควบคุมด่วนบนหน้าจอ 3 มิติ (Floating Action Buttons) -->
+<div id="fabCol" aria-label="ปุ่มควบคุมมุมมองและตำแหน่ง">
+  <button id="btnEyeView" type="button" aria-pressed="false" class="glass btn-base w-11 h-11 rounded-2xl text-slate-800 hover:bg-white shadow-lg" title="มุมมองจากสายตา (เหมือนถือมือถือเดินหาสินค้า)" aria-label="เปิด/ปิดมุมมองจากสายตา">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+  </button>
+  <button id="btnMyPos" type="button" class="glass btn-base w-11 h-11 rounded-2xl text-slate-800 hover:bg-white shadow-lg" title="กลับมาที่ตำแหน่งของฉัน / มองตรงไปข้างหน้า" aria-label="กลับมาที่ตำแหน่งของฉัน">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+  </button>
+  <button id="btnQuickGps" type="button" class="glass btn-base w-11 h-11 rounded-2xl text-slate-800 hover:bg-white shadow-lg" title="เปิด/สลับ GPS มือถือจริง">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 6a6 6 0 0 1 6 6"/><circle cx="12" cy="12" r="2"/><path d="M12 22a10 10 0 0 1-10-10"/></svg>
+  </button>
+  <button id="btnTapMove" type="button" class="glass btn-base w-11 h-11 rounded-2xl text-slate-800 hover:bg-white shadow-lg" title="แตะพื้นโกดังเพื่อย้ายตำแหน่งที่ฉันยืน">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+  </button>
+  <button id="btnToggle2D" type="button" class="glass btn-base w-11 h-11 rounded-2xl text-xs font-extrabold text-slate-800 hover:bg-white shadow-lg" title="สลับมุมมองผังบน 2D / 3D">
+    <span id="lbl2D3D">2D</span>
+  </button>
+  <button id="btnHomeView" type="button" class="glass btn-base w-11 h-11 rounded-2xl text-slate-800 hover:bg-white shadow-lg" title="กลับมุมมองภาพรวมทั้งโกดัง">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h14V9.5"/></svg>
+  </button>
+</div>
+
+<!-- ปุ่มกดเดินจำลองบนหน้าจอ (สำหรับมือถือ/แท็บเล็ต/โน้ตบุ๊ก) -->
+<div id="walkPad" aria-label="ปุ่มควบคุมการเดินจำลอง">
+  <button type="button" class="wpad-btn col-start-2" data-wkey="up" aria-label="เดินขึ้นเหนือ">▲</button>
+  <button type="button" class="wpad-btn col-start-1" data-wkey="left" aria-label="เดินไปทางซ้าย">◀</button>
+  <button type="button" class="wpad-btn" data-wkey="down" aria-label="เดินลงใต้">▼</button>
+  <button type="button" class="wpad-btn" data-wkey="right" aria-label="เดินไปทางขวา">▶</button>
+</div>
+
+<!-- แถบเมนูด้านล่างสำหรับ มือถือ และ แท็บเล็ต -->
+<nav id="mobileDock" class="glass rounded-2xl" aria-label="เมนูหลักมือถือและแท็บเล็ต">
+  <button type="button" data-mobtab="map" aria-pressed="true" class="btn-base flex-col gap-1 rounded-xl text-[11px] font-bold text-blue-700 bg-blue-50/90">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+    <span>แผนที่ 3D</span>
+  </button>
+  <button type="button" data-mobtab="catalog" aria-pressed="false" class="btn-base flex-col gap-1 rounded-xl text-[11px] font-bold text-slate-600">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <span>ค้นหาสินค้า</span>
+  </button>
+  <button type="button" data-mobtab="route" aria-pressed="false" class="btn-base relative flex-col gap-1 rounded-xl text-[11px] font-bold text-slate-600">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    <span>ที่เลือก</span>
+    <span id="mobSelBadge" class="badge-base absolute top-1 right-3 min-w-[17px] h-[17px] px-1 rounded-full bg-blue-600 text-white text-[10px] font-extrabold tnum">0</span>
+  </button>
+  <button type="button" data-mobtab="gps" aria-pressed="false" class="btn-base flex-col gap-1 rounded-xl text-[11px] font-bold text-slate-600">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+    <span>GPS มือถือ</span>
+  </button>
+</nav>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast" class="glass-dark text-white text-xs font-semibold shadow-xl" role="status" aria-live="polite"></div>
+
+<!-- 3D OVERLAY LAYERS -->
+<div id="zoneLabelLayer"></div>
+<div id="pinLayer"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
